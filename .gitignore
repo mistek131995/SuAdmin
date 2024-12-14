@@ -5,4 +5,9 @@ riderModule.iml
 /_ReSharper.Caches/
 .idea/*
 SuAdmin.sln.DotSettings.user
-SuAdmin/app.db
+/SuAdmin/app.db
+/SuAdmin/Plugins/*
+KafkaPlugin/bin/*
+KafkaPlugin/obj/*
+DockerPlugin/bin/*
+DockerPlugin/obj/*

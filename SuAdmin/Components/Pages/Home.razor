@@ -1,7 +1,23 @@
 ﻿@page "/"
+@using SuAdmin.Models
+@rendermode InteractiveServer
 
-<PageTitle>Home</PageTitle>
+<PageTitle>Главная</PageTitle>
 
-<h1>Hello, world!</h1>
+@foreach (var widget in _widgets)
+{
+    <DynamicComponent Type="widget"/>
+}
 
-Welcome to your new app.
+
+@code
+{
+    [Inject] private List<Plugin> _pluginWidgets{ get; set; }
+
+    private List<Type> _widgets;
+    
+    protected override void OnInitialized()
+    {
+        _widgets = _pluginWidgets.SelectMany(x => x.Widgets).ToList();
+    }
+}

@@ -1,0 +1,22 @@
+﻿<h3>Основной виджет на главной странице</h3>
+
+<div class="d-flex w-100">
+    
+    @if (_brokers is { Count: > 0 })
+    {
+        foreach (var broker in _brokers)
+        {
+            <div class="border border-1 rounded-2">
+                @(broker.Host + ":" + broker.Port)
+            </div>
+        }
+    }
+    else
+    {
+        <div>Список пуст</div>
+    }
+</div>
+
+@code {
+    
+}

@@ -6,4 +6,18 @@
         <ImplicitUsings>enable</ImplicitUsings>
     </PropertyGroup>
 
+    <ItemGroup>
+      <Folder Include="Plugins\KafkaPlugin\" />
+      <Folder Include="Services\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\PluginContracts\PluginContracts.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="Plugins\KafkaPlugin\publish\KafkaPlugin.deps.json" />
+      <_ContentIncludedByDefault Remove="Plugins\KafkaPlugin\publish\KafkaPlugin.staticwebassets.endpoints.json" />
+    </ItemGroup>
+
 </Project>

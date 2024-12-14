@@ -1,10 +1,14 @@
 using SuAdmin.Components;
+using SuAdmin.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+
+var plugins = builder.Services.LoadPlugins();
+builder.Services.AddSingleton(plugins);
 
 var app = builder.Build();
 
