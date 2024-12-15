@@ -101,6 +101,7 @@ public static class PluginManager
             var tableColumns = tableType.GetProperties().Select(x => (x.Name, x.PropertyType)).ToList();
             
             //TODO: Добавить проверку на неизвестные типы
+            //TODO: Добавить проверку на на столбцы с одинаковыми именами, но разными типами
             
             migrations.Append(await SqlBuilder.BuildTableSql(context, tableName, tableColumns));
         }

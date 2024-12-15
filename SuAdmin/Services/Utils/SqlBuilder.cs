@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Primitives;
 using PluginContracts.Database;
 
 namespace SuAdmin.Services.Utils;
@@ -40,9 +41,14 @@ public static class SqlBuilder
     {
         var tableInfo = await GetTableInfo(context, tableName);
         
+        var sql = new StringBuilder();
+
+        foreach (var column in columns.Where(x => !tableInfo.Contains(x.columnName)))
+        {
+            sql.Append($"ALTER TABLE {tableName} ADD COLUMN {column.columnName} {CastType(column.columnType)} NOT NULL;");
+        }
         
-        
-        return string.Empty;
+        return sql.ToString();
     }
 
     private static string CastType(Type type)
@@ -60,7 +66,7 @@ public static class SqlBuilder
         }
     }
 
-    private static async Task<List<(string name, string type)>> GetTableInfo(Context context, string tableName)
+    private static async Task<List<string>> GetTableInfo(Context context, string tableName)
     {
         await using var connection = context.Database.GetDbConnection();
         await connection.OpenAsync();
@@ -70,11 +76,11 @@ public static class SqlBuilder
         
         await using var reader = await command.ExecuteReaderAsync();
         
-        var tableInfo = new List<(string name, string type)>();
+        var tableInfo = new List<string>();
         
         while (await reader.ReadAsync())
         {
-            tableInfo.Add((reader["name"].ToString(), reader["type"].ToString()));
+            tableInfo.Add((reader["name"].ToString()));
         }
         
         return tableInfo;
