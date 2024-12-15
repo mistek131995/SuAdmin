@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
 using PluginContracts;
-using SuAdmin.Infrastructure.Database;
+using PluginContracts.Database;
 using SuAdmin.Models;
 using SuAdmin.Services.Utils;
 
@@ -68,9 +68,25 @@ public static class PluginManager
         return plugins;
     }
 
-    public static async Task CreatePluginTables(this WebApplication app)
+    //TODO: Переименовать в конфигурирование DB
+    public static async Task ConfigurePluginsDatabase(this WebApplication app)
     {
         using var scope = app.Services.CreateScope();
+        
+        var mainTypes = AppDomain.CurrentDomain.GetAssemblies()
+            .SelectMany(x => x.GetTypes())
+            .Where(x => typeof(IPlugin).IsAssignableFrom(x) && !x.IsAbstract)
+            .ToList();
+
+        foreach (var type in mainTypes)
+        {
+            var pluginInstance = (IPlugin) Activator.CreateInstance(type);
+            
+            Context.DynamicModelBuilder = modelBuilder =>
+            {
+                pluginInstance.Configure(modelBuilder);
+            };
+        }
         
         var context = scope.ServiceProvider.GetRequiredService<Context>();
         await context.Database.EnsureCreatedAsync();
@@ -78,13 +94,11 @@ public static class PluginManager
         var migrations = new StringBuilder();
 
         var tableTypes = AppDomain.CurrentDomain.GetAssemblies().SelectMany(x => x.GetTypes()).Where(x => typeof(IPluginTable).IsAssignableFrom(x) && !x.IsAbstract).ToList();
-
-        var regex = new Regex("(?<!^)([A-Z])");
         
         foreach (var tableType in tableTypes)
         {
-            var tableName = regex.Replace(tableType.Name, "_$1").ToLower();
-            var tableColumns = tableType.GetProperties().Select(x => (regex.Replace(x.Name, "_$1").ToLower(), x.PropertyType)).ToList();
+            var tableName = tableType.Name;
+            var tableColumns = tableType.GetProperties().Select(x => (x.Name, x.PropertyType)).ToList();
             
             //TODO: Добавить проверку на неизвестные типы
             

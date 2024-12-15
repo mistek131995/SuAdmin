@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
-using SuAdmin.Infrastructure.Database;
+using PluginContracts.Database;
 
 namespace SuAdmin.Services.Utils;
 
@@ -50,8 +50,10 @@ public static class SqlBuilder
         {
             return " TEXT ";
         }
-        
-        throw new Exception("Type not supported");
+        else
+        {
+            throw new Exception("Type not supported");
+        }
     }
     
     private static async Task<bool> TableExistsAsync(Context context, string tableName)

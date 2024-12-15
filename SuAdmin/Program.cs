@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
+using PluginContracts.Database;
 using SuAdmin.Components;
 using SuAdmin.Constants;
 using SuAdmin.Extensions;
-using SuAdmin.Infrastructure.Database;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,7 +20,7 @@ builder.Services.AddSingleton(plugins);
 
 var app = builder.Build();
 
-app.CreatePluginTables();
+app.ConfigurePluginsDatabase();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
