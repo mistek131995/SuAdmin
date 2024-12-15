@@ -1,16 +1,26 @@
+using Microsoft.EntityFrameworkCore;
 using SuAdmin.Components;
+using SuAdmin.Constants;
 using SuAdmin.Extensions;
+using SuAdmin.Infrastructure.Database;
 
 var builder = WebApplication.CreateBuilder(args);
+
+SQLitePCL.Batteries.Init();
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
+builder.Services.AddDbContext<Context>(options =>
+    options.UseSqlite(Common.connectionString));
+
 var plugins = builder.Services.LoadPlugins();
 builder.Services.AddSingleton(plugins);
 
 var app = builder.Build();
+
+app.CreatePluginTables();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

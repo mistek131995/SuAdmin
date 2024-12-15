@@ -16,5 +16,6 @@ public partial class MainWidget : ComponentBase
     protected override async Task OnInitializedAsync()
     {
         _brokers = await Task.Run(() => _adminClient.GetMetadata(TimeSpan.FromSeconds(2)).Brokers);
+        
     }
 }

@@ -1,11 +1,16 @@
 ﻿using System.Reflection;
+using System.Text;
+using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Components;
+using Microsoft.EntityFrameworkCore;
 using PluginContracts;
+using SuAdmin.Infrastructure.Database;
 using SuAdmin.Models;
+using SuAdmin.Services.Utils;
 
 namespace SuAdmin.Extensions;
 
-public static class Startup
+public static class PluginManager
 {
     public static List<Plugin> LoadPlugins(this IServiceCollection services)
     {
@@ -33,8 +38,8 @@ public static class Startup
             {
                 Name = pluginAssembly.GetName().Name,
                 Version = pluginAssembly.GetName().Version.ToString(),
-                Widgets = pluginAssembly.GetTypes().Where(t => t.BaseType.Name == typeof(ComponentBase).Name && !t.IsAbstract && t.FullName.Contains("Widget")).ToList(),
-                MainPage = pluginAssembly.GetTypes().FirstOrDefault(t => t.BaseType.Name == typeof(ComponentBase).Name && !t.IsAbstract && t.FullName.Contains("MainPage"))
+                Widgets = pluginAssembly.GetTypes().Where(t => t?.BaseType?.Name == nameof(ComponentBase) && !t.IsAbstract && t.FullName.Contains("Widget")).ToList(),
+                MainPage = pluginAssembly.GetTypes().FirstOrDefault(t => t.BaseType?.Name == nameof(ComponentBase) && !t.IsAbstract && t.FullName.Contains("MainPage"))
             };
                     
             plugins.Add(plugin);
@@ -61,5 +66,41 @@ public static class Startup
         }
         
         return plugins;
+    }
+
+    public static async Task CreatePluginTables(this WebApplication app)
+    {
+        using var scope = app.Services.CreateScope();
+        
+        var context = scope.ServiceProvider.GetRequiredService<Context>();
+        await context.Database.EnsureCreatedAsync();
+
+        var migrations = new StringBuilder();
+
+        var tableTypes = AppDomain.CurrentDomain.GetAssemblies().SelectMany(x => x.GetTypes()).Where(x => typeof(IPluginTable).IsAssignableFrom(x) && !x.IsAbstract).ToList();
+
+        var regex = new Regex("(?<!^)([A-Z])");
+        
+        foreach (var tableType in tableTypes)
+        {
+            var tableName = regex.Replace(tableType.Name, "_$1").ToLower();
+            var tableColumns = tableType.GetProperties().Select(x => (regex.Replace(x.Name, "_$1").ToLower(), x.PropertyType)).ToList();
+            
+            //TODO: Добавить проверку на неизвестные типы
+            
+            migrations.Append(await SqlBuilder.BuildTableSql(context, tableName, tableColumns));
+        }
+
+        try
+        {
+            var sql = migrations.ToString();
+            await context.Database.ExecuteSqlRawAsync(sql);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+
     }
 }
