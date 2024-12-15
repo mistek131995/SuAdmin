@@ -105,16 +105,7 @@ public static class PluginManager
             migrations.Append(await SqlBuilder.BuildTableSql(context, tableName, tableColumns));
         }
 
-        try
-        {
-            var sql = migrations.ToString();
-            await context.Database.ExecuteSqlRawAsync(sql);
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            throw;
-        }
-
+        var sql = migrations.ToString();
+        await context.Database.ExecuteSqlRawAsync(sql);
     }
 }

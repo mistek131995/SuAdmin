@@ -7,6 +7,8 @@ namespace KafkaPlugin;
 
 public class Main : PluginContracts.IPlugin
 {
+    
+    
     public void AddService(IServiceCollection services)
     {
         services.AddTransient<IAdminClient>(x =>

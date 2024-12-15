@@ -38,6 +38,10 @@ public static class SqlBuilder
 
     private static async Task<string> UpdateTable(Context context, string tableName, List<(string columnName, Type columnType)> columns)
     {
+        var tableInfo = await GetTableInfo(context, tableName);
+        
+        
+        
         return string.Empty;
     }
 
@@ -54,6 +58,26 @@ public static class SqlBuilder
         {
             throw new Exception("Type not supported");
         }
+    }
+
+    private static async Task<List<(string name, string type)>> GetTableInfo(Context context, string tableName)
+    {
+        await using var connection = context.Database.GetDbConnection();
+        await connection.OpenAsync();
+        
+        var command = connection.CreateCommand();
+        command.CommandText = $"PRAGMA table_info({tableName})";
+        
+        await using var reader = await command.ExecuteReaderAsync();
+        
+        var tableInfo = new List<(string name, string type)>();
+        
+        while (await reader.ReadAsync())
+        {
+            tableInfo.Add((reader["name"].ToString(), reader["type"].ToString()));
+        }
+        
+        return tableInfo;
     }
     
     private static async Task<bool> TableExistsAsync(Context context, string tableName)
