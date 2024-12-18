@@ -1,18 +1,13 @@
 ﻿using System.Reflection;
-using System.Text;
-using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Components;
-using Microsoft.EntityFrameworkCore;
 using PluginContracts;
-using PluginContracts.Database;
 using SuAdmin.Models;
-using SuAdmin.Services.Utils;
 
 namespace SuAdmin.Extensions;
 
 public static class PluginManager
 {
-    public static List<Plugin> LoadPlugins(this IServiceCollection services)
+    public static async Task<List<Plugin>> LoadPlugins(this IServiceCollection services)
     {
         var pluginsMainFolderPath = Path.Combine(Directory.GetCurrentDirectory(), "Plugins");
         
@@ -30,8 +25,8 @@ public static class PluginManager
             var pluginDll = Directory.GetFiles(pluginFolder, pluginName).FirstOrDefault();
             var pluginAssembly = Assembly.LoadFrom(pluginDll);
             
-            var type = pluginAssembly.GetTypes().FirstOrDefault(x => typeof(IPlugin).IsAssignableFrom(x) && !x.IsAbstract);
-            var pluginInstance = (IPlugin) Activator.CreateInstance(type);
+            var pluginInstance = pluginAssembly.GetPluginsMainInstanceFromAssembly();
+            await pluginInstance.CreateDatabase();
             pluginInstance.AddService(services);
                     
             var plugin = new Plugin
@@ -67,46 +62,18 @@ public static class PluginManager
         
         return plugins;
     }
-
-    //TODO: Переименовать в конфигурирование DB
-    public static async Task ConfigurePluginsDatabase(this WebApplication app)
+    
+    public static IPlugin GetPluginsMainInstanceFromAssembly(this Assembly assembly)
     {
-        using var scope = app.Services.CreateScope();
-        
-        var mainTypes = AppDomain.CurrentDomain.GetAssemblies()
-            .SelectMany(x => x.GetTypes())
+        return assembly
+            .GetTypes()
             .Where(x => typeof(IPlugin).IsAssignableFrom(x) && !x.IsAbstract)
-            .ToList();
-
-        foreach (var type in mainTypes)
-        {
-            var pluginInstance = (IPlugin) Activator.CreateInstance(type);
-            
-            Context.DynamicModelBuilder = modelBuilder =>
-            {
-                pluginInstance.Configure(modelBuilder);
-            };
-        }
-        
-        var context = scope.ServiceProvider.GetRequiredService<Context>();
-        await context.Database.EnsureCreatedAsync();
-
-        var migrations = new StringBuilder();
-
-        var tableTypes = AppDomain.CurrentDomain.GetAssemblies().SelectMany(x => x.GetTypes()).Where(x => typeof(IPluginTable).IsAssignableFrom(x) && !x.IsAbstract).ToList();
-        
-        foreach (var tableType in tableTypes)
-        {
-            var tableName = tableType.Name;
-            var tableColumns = tableType.GetProperties().Select(x => (x.Name, x.PropertyType)).ToList();
-            
-            //TODO: Добавить проверку на неизвестные типы
-            //TODO: Добавить проверку на на столбцы с одинаковыми именами, но разными типами
-            
-            migrations.Append(await SqlBuilder.BuildTableSql(context, tableName, tableColumns));
-        }
-
-        var sql = migrations.ToString();
-        await context.Database.ExecuteSqlRawAsync(sql);
+            .Select(x => (IPlugin) Activator.CreateInstance(x))
+            .FirstOrDefault() ?? throw new Exception("Метод реализующий IPlugin не найден");
+    }
+    
+    public static List<IPlugin> GetPluginsMainInstanceFromAssembly(this AppDomain assembly)
+    {
+        return AppDomain.CurrentDomain.GetAssemblies().Select(x => x.GetPluginsMainInstanceFromAssembly()).ToList();
     }
 }

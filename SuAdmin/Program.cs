@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
-using PluginContracts.Database;
 using SuAdmin.Components;
 using SuAdmin.Constants;
 using SuAdmin.Extensions;
+using SuAdmin.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,15 +12,13 @@ SQLitePCL.Batteries.Init();
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-builder.Services.AddDbContext<Context>(options =>
+builder.Services.AddDbContext<HostContext>(options =>
     options.UseSqlite(Common.connectionString));
 
-var plugins = builder.Services.LoadPlugins();
+var plugins = await builder.Services.LoadPlugins();
 builder.Services.AddSingleton(plugins);
 
 var app = builder.Build();
-
-app.ConfigurePluginsDatabase();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -38,5 +36,7 @@ app.UseAntiforgery();
 app.MapStaticAssets();
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
+
+
 
 app.Run();

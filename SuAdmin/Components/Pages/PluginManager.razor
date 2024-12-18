@@ -1,0 +1,26 @@
+﻿@page "/plugin-manager"
+@rendermode InteractiveServer
+
+<h3>PluginManager</h3>
+
+<div class="d-flex flex-wrap w-100">
+    @if (_plugins is { Count: > 0 })
+    {
+        foreach (var plugin in _plugins)
+        {
+            <div class="w-25">
+                @plugin.Name
+            </div>
+        }
+    }
+    else
+    {
+        <div class="w-100">
+            Список плагинов загружается
+        </div>
+    }
+</div>
+
+@code {
+    
+}

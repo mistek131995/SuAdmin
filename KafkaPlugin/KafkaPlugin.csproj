@@ -28,6 +28,13 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Services\" />
+      <None Remove="Migrations\01_CreateHostTable.sql" />
+      <Content Include="Migrations\01_CreateHostTable.sql">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="Migrations\00_CreateMigrationTable.sql" />
+      <Content Include="Migrations\00_CreateMigrationTable.sql">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
     </ItemGroup>
 </Project>

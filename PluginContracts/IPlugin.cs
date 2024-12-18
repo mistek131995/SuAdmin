@@ -5,6 +5,7 @@ namespace PluginContracts;
 
 public interface IPlugin
 {
+    public string Name { get; }
+    Task CreateDatabase();
     void AddService(IServiceCollection services);
-    void Configure(ModelBuilder modelBuilder);
 }

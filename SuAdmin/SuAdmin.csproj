@@ -8,6 +8,7 @@
 
     <ItemGroup>
       <Folder Include="Plugins\KafkaPlugin\" />
+      <Folder Include="Services\" />
     </ItemGroup>
 
     <ItemGroup>
@@ -17,6 +18,9 @@
     <ItemGroup>
       <_ContentIncludedByDefault Remove="Plugins\KafkaPlugin\publish\KafkaPlugin.deps.json" />
       <_ContentIncludedByDefault Remove="Plugins\KafkaPlugin\publish\KafkaPlugin.staticwebassets.endpoints.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\icons\bootstrap-icons.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\icons\fonts\bootstrap-icons.woff" />
+      <_ContentIncludedByDefault Remove="wwwroot\icons\fonts\bootstrap-icons.woff2" />
     </ItemGroup>
 
 </Project>

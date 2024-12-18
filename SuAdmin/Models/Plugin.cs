@@ -1,5 +1,8 @@
-﻿namespace SuAdmin.Models;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
+namespace SuAdmin.Models;
+
+[Table("Plugins")]
 public class Plugin
 {
     public string Name { get; set; }
