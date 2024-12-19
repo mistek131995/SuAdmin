@@ -12,13 +12,18 @@ SQLitePCL.Batteries.Init();
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-builder.Services.AddDbContext<HostContext>(options =>
-    options.UseSqlite(Common.connectionString));
+builder.Services.AddDbContext<SqlLiteContext>(options =>
+    options.UseSqlite(Common.ConnectionString));
 
 var plugins = await builder.Services.LoadPlugins();
 builder.Services.AddSingleton(plugins);
 
 var app = builder.Build();
+
+using var scope = app.Services.CreateScope();
+await using var context = scope.ServiceProvider.GetRequiredService<SqlLiteContext>();
+await context.Database.MigrateAsync();
+
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

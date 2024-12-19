@@ -6,6 +6,6 @@ namespace PluginContracts;
 public interface IPlugin
 {
     public string Name { get; }
-    Task CreateDatabase();
+    Task InstallPlugin();
     void AddService(IServiceCollection services);
 }

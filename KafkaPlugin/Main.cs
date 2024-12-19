@@ -13,7 +13,45 @@ public class Main : PluginContracts.IPlugin
 {
     public string Name { get; } = "Kafka";
 
-    public async Task CreateDatabase()
+    public async Task InstallPlugin()
+    {
+        await CreateDatabase();
+    }
+
+    public void AddService(IServiceCollection services)
+    {
+        services.AddTransient<IAdminClient>(x =>
+        {
+            var adminClientConfig = new AdminClientConfig()
+            {
+                BootstrapServers = "localhost:9092"
+            };
+
+            return new AdminClientBuilder(adminClientConfig).Build();
+        });
+    }
+    
+    
+    private async Task<bool> TableExistsAsync(Context context, string tableName)
+    {
+        var query = $"SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name=@tableName";
+
+        await using var connection = context.Database.GetDbConnection();
+        await connection.OpenAsync();
+
+        await using var command = connection.CreateCommand();
+        command.CommandText = query;
+
+        var tableNameParam = command.CreateParameter();
+        tableNameParam.ParameterName = "@tableName";
+        tableNameParam.Value = tableName;
+        command.Parameters.Add(tableNameParam);
+
+        var result = (long)await command.ExecuteScalarAsync();
+        return result > 0;
+    }
+    
+    private async Task CreateDatabase()
     {
         await using var context = new Context(); 
         var migrationsDirectory = Path.Combine(Directory.GetCurrentDirectory(), "Plugins", Assembly.GetAssembly(typeof(Main)).GetName().Name, "Migrations");
@@ -49,38 +87,5 @@ public class Main : PluginContracts.IPlugin
             await context.SaveChangesAsync();
         }
         
-    }
-
-    public void AddService(IServiceCollection services)
-    {
-        services.AddTransient<IAdminClient>(x =>
-        {
-            var adminClientConfig = new AdminClientConfig()
-            {
-                BootstrapServers = "localhost:9092"
-            };
-
-            return new AdminClientBuilder(adminClientConfig).Build();
-        });
-    }
-    
-    
-    private async Task<bool> TableExistsAsync(Context context, string tableName)
-    {
-        var query = $"SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name=@tableName";
-
-        await using var connection = context.Database.GetDbConnection();
-        await connection.OpenAsync();
-
-        await using var command = connection.CreateCommand();
-        command.CommandText = query;
-
-        var tableNameParam = command.CreateParameter();
-        tableNameParam.ParameterName = "@tableName";
-        tableNameParam.Value = tableName;
-        command.Parameters.Add(tableNameParam);
-
-        var result = (long)await command.ExecuteScalarAsync();
-        return result > 0;
     }
 }

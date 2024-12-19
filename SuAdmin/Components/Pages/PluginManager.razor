@@ -9,7 +9,26 @@
         foreach (var plugin in _plugins)
         {
             <div class="w-25">
-                @plugin.Name
+                <div class="d-flex justify-content-between align-items-center">
+                    <span>
+                        @plugin.Name
+                    </span>
+                    <span>
+                        @if (_installedPlugins.Any(x => x.Name == plugin.Name))
+                        {
+                            <button class="btn btn-danger btn-sm" onclick="@(() => UninstallPlugin(plugin))">
+                                Удалить
+                            </button>
+                        }
+                        else
+                        {
+                            <button class="btn btn-success btn-sm" onclick="@(() => InstallPlugin(plugin))">
+                                Установить
+                            </button>
+                        }
+                    </span>
+                </div>
+
             </div>
         }
     }

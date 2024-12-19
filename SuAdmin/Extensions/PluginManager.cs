@@ -26,7 +26,6 @@ public static class PluginManager
             var pluginAssembly = Assembly.LoadFrom(pluginDll);
             
             var pluginInstance = pluginAssembly.GetPluginsMainInstanceFromAssembly();
-            await pluginInstance.CreateDatabase();
             pluginInstance.AddService(services);
                     
             var plugin = new Plugin
@@ -69,11 +68,15 @@ public static class PluginManager
             .GetTypes()
             .Where(x => typeof(IPlugin).IsAssignableFrom(x) && !x.IsAbstract)
             .Select(x => (IPlugin) Activator.CreateInstance(x))
-            .FirstOrDefault() ?? throw new Exception("Метод реализующий IPlugin не найден");
+            .FirstOrDefault();
     }
     
     public static List<IPlugin> GetPluginsMainInstanceFromAssembly(this AppDomain assembly)
     {
-        return AppDomain.CurrentDomain.GetAssemblies().Select(x => x.GetPluginsMainInstanceFromAssembly()).ToList();
+        return AppDomain.CurrentDomain
+            .GetAssemblies()
+            .SelectMany(x => x.GetTypes().Where(x => typeof(IPlugin).IsAssignableFrom(x) && !x.IsAbstract))
+            .Select(x => (IPlugin) Activator.CreateInstance(x))
+            .ToList();
     }
 }

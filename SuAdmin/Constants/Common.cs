@@ -2,5 +2,5 @@
 
 public static class Common
 {
-    public static string connectionString = "Data Source=app.db";
+    public const string ConnectionString = "Data Source=app.db";
 }
