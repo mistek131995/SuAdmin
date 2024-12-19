@@ -1,5 +1,5 @@
 ﻿@page "/"
-@using SuAdmin.Models
+@using SuAdmin.Extensions
 @rendermode InteractiveServer
 
 <PageTitle>Главная</PageTitle>
@@ -12,12 +12,10 @@
 
 @code
 {
-    [Inject] private List<Plugin> _pluginWidgets{ get; set; }
-
     private List<Type> _widgets;
     
     protected override void OnInitialized()
     {
-        _widgets = _pluginWidgets.SelectMany(x => x.Widgets).ToList();
+        _widgets = AppDomain.CurrentDomain.GetWidgetsInstanceFromAssembly();
     }
 }

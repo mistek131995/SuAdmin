@@ -15,8 +15,8 @@ builder.Services.AddRazorComponents()
 builder.Services.AddDbContext<SqlLiteContext>(options =>
     options.UseSqlite(Common.ConnectionString));
 
-var plugins = await builder.Services.LoadPlugins();
-builder.Services.AddSingleton(plugins);
+await builder.Services.LoadPlugins();
+//builder.Services.AddSingleton(plugins);
 
 var app = builder.Build();
 

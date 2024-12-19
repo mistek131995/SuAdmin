@@ -12,6 +12,12 @@ namespace KafkaPlugin;
 public class Main : PluginContracts.IPlugin
 {
     public string Name { get; } = "Kafka";
+    public string Description { get; } = """
+                                             Плагин Kafka предоставляет удобный интерфейс для просмотра данных в топиках, 
+                                             управления ими, мониторинга состояния брокеров и работы с потребителями и продюсерами, 
+                                             упрощая администрирование и анализ системы.
+                                         """;
+
 
     public async Task InstallPlugin()
     {

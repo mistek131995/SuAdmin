@@ -1,13 +1,12 @@
 ﻿using System.Reflection;
 using Microsoft.AspNetCore.Components;
 using PluginContracts;
-using SuAdmin.Models;
 
 namespace SuAdmin.Extensions;
 
 public static class PluginManager
 {
-    public static async Task<List<Plugin>> LoadPlugins(this IServiceCollection services)
+    public static async Task LoadPlugins(this IServiceCollection services)
     {
         var pluginsMainFolderPath = Path.Combine(Directory.GetCurrentDirectory(), "Plugins");
         
@@ -15,8 +14,6 @@ public static class PluginManager
             Directory.CreateDirectory(pluginsMainFolderPath);
 
         var pluginFolders = Directory.GetDirectories(pluginsMainFolderPath).ToList();
-
-        var plugins = new List<Plugin>();
         
         foreach (var pluginFolder in pluginFolders)
         {
@@ -27,16 +24,6 @@ public static class PluginManager
             
             var pluginInstance = pluginAssembly.GetPluginsMainInstanceFromAssembly();
             pluginInstance.AddService(services);
-                    
-            var plugin = new Plugin
-            {
-                Name = pluginAssembly.GetName().Name,
-                Version = pluginAssembly.GetName().Version.ToString(),
-                Widgets = pluginAssembly.GetTypes().Where(t => t?.BaseType?.Name == nameof(ComponentBase) && !t.IsAbstract && t.FullName.Contains("Widget")).ToList(),
-                MainPage = pluginAssembly.GetTypes().FirstOrDefault(t => t.BaseType?.Name == nameof(ComponentBase) && !t.IsAbstract && t.FullName.Contains("MainPage"))
-            };
-                    
-            plugins.Add(plugin);
             
             var dependencyNames = pluginAssembly.GetReferencedAssemblies().Select(x => x.Name).ToList();
             var dependenciesDll = Directory
@@ -58,8 +45,6 @@ public static class PluginManager
                 Assembly.LoadFrom(file);
             }
         }
-        
-        return plugins;
     }
     
     public static IPlugin GetPluginsMainInstanceFromAssembly(this Assembly assembly)
@@ -77,6 +62,14 @@ public static class PluginManager
             .GetAssemblies()
             .SelectMany(x => x.GetTypes().Where(x => typeof(IPlugin).IsAssignableFrom(x) && !x.IsAbstract))
             .Select(x => (IPlugin) Activator.CreateInstance(x))
+            .ToList();
+    }
+    
+    public static List<Type> GetWidgetsInstanceFromAssembly(this AppDomain assembly)
+    {
+        return AppDomain.CurrentDomain
+            .GetAssemblies()
+            .SelectMany(x => x.GetTypes().Where(t => t.BaseType?.Name == nameof(ComponentBase) && !t.IsAbstract && t.FullName.Contains("Widget")).ToList())
             .ToList();
     }
 }

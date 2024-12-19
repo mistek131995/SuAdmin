@@ -5,7 +5,9 @@ namespace PluginContracts;
 
 public interface IPlugin
 {
-    public string Name { get; }
+    string Name { get; }
+    string Description { get; }
+    
     Task InstallPlugin();
     void AddService(IServiceCollection services);
 }

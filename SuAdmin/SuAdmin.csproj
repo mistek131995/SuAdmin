@@ -7,6 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <Folder Include="Models\" />
       <Folder Include="Plugins\KafkaPlugin\" />
       <Folder Include="Services\" />
     </ItemGroup>
