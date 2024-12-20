@@ -1,0 +1,46 @@
+﻿@using Contracts.Components
+@using Microsoft.AspNetCore.Components.Forms
+
+<Modal @ref="ModalRef" Title="Добавить новый хост" OnClose="HandleClose" OnConfirm="OnSubmitHandlerAsync">
+    <EditForm Model="addHostModel" OnValidSubmit="OnSubmitHandlerAsync">
+        <DataAnnotationsValidator/>
+        <ValidationSummary/>
+        
+        <div class="mb-2">
+            <label>IP адрес:</label>
+            <InputText class="form-control" @bind-Value="addHostModel.Ip"/>
+        </div>
+        
+        <div class="mb-3">
+            <label>Порт:</label>
+            <InputNumber class="form-control" @bind-Value="addHostModel.Port"/>
+        </div>
+        
+        <div class="modal-footer">
+            <button id="closeModal" type="button" class="btn btn-secondary">Закрыть</button>
+            <button type="submit" class="btn btn-success">Добавить</button>
+        </div>
+    </EditForm>
+</Modal>
+
+<button id="addHost" class="btn btn-primary">Добавить хост</button>
+
+<script>
+    function addHostBtnHandler(buttonId, dotNetHelper) {
+        const button = document.getElementById(buttonId);
+        if (button) {
+            button.addEventListener("click", () => {
+                dotNetHelper.invokeMethodAsync("AddHostAsync");
+            });
+        }
+    }
+    
+    function closeModal(buttonId, dotNetHelper){
+        const button = document.getElementById(buttonId);
+        if (button){
+            button.addEventListener("click", () => {
+                dotNetHelper.invokeMethodAsync("CloseModal");
+            })
+        }
+    }
+</script>

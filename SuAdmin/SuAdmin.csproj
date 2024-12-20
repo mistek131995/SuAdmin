@@ -13,10 +13,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\PluginContracts\PluginContracts.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
       <_ContentIncludedByDefault Remove="Plugins\KafkaPlugin\publish\KafkaPlugin.deps.json" />
       <_ContentIncludedByDefault Remove="Plugins\KafkaPlugin\publish\KafkaPlugin.staticwebassets.endpoints.json" />
       <_ContentIncludedByDefault Remove="wwwroot\icons\bootstrap-icons.css" />
@@ -29,6 +25,10 @@
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Contracts\Contracts.csproj" />
     </ItemGroup>
 
 </Project>

@@ -7,8 +7,8 @@ public partial class PluginManager : ComponentBase
 {
     [Parameter] public string? assemblyName { get; set; }
 
-    private Type GetPluginMainPage()
+    private Type LoadComponent()
     {
-        return AppDomain.CurrentDomain.GetMainPageFromAssembly(assemblyName);
+        return AppDomain.CurrentDomain.GetMainPageFromAssembly("KafkaPlugin");
     }
 }

@@ -2,6 +2,7 @@
 using System.Reflection;
 using System.Threading.Tasks;
 using Confluent.Kafka;
+using Contracts.Interfaces;
 using KafkaPlugin.Database;
 using KafkaPlugin.Database.Database;
 using Microsoft.EntityFrameworkCore;
@@ -9,7 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace KafkaPlugin;
 
-public class Main : PluginContracts.IPlugin
+public class Main : IPlugin
 {
     public string Name { get; } = "Kafka";
     public string Description { get; } = """

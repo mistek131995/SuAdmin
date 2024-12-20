@@ -1,0 +1,50 @@
+﻿<div class="modal @ModalClass" tabindex="-1" style="@ModalStyle" aria-hidden="true">
+    <div class="modal-dialog @Size">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">@Title</h5>
+                <button type="button" class="btn-close" @onclick="Close"></button>
+            </div>
+            <div class="modal-body">
+                @ChildContent
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public string Title { get; set; } = "Модальное окно";
+    [Parameter] public string Size { get; set; } = ""; // Например, "modal-lg" для большого окна
+    [Parameter] public EventCallback OnClose { get; set; }
+    [Parameter] public EventCallback OnConfirm { get; set; }
+    [Parameter] public bool ShowFooter { get; set; } = true;
+
+    private string ModalStyle => IsVisible ? "display: block;" : "display: none;";
+    private string ModalClass => IsVisible ? "fade show" : "fade";
+    private bool IsVisible { get; set; }
+
+    public void Show()
+    {
+        IsVisible = true;
+        StateHasChanged();
+    }
+
+    public void Hide()
+    {
+        IsVisible = false;
+        StateHasChanged();
+    }
+
+    private async Task Close()
+    {
+        await OnClose.InvokeAsync();
+        Hide();
+    }
+
+    private async Task Confirm()
+    {
+        await OnConfirm.InvokeAsync();
+        Hide();
+    }
+}

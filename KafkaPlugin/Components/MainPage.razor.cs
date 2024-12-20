@@ -4,4 +4,5 @@ namespace KafkaPlugin.Components;
 
 public partial class MainPage : ComponentBase
 {
+
 }

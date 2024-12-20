@@ -18,6 +18,11 @@ builder.Services.AddDbContext<SqlLiteContext>(options =>
 await builder.Services.LoadPlugins();
 //builder.Services.AddSingleton(plugins);
 
+builder.Services.AddServerSideBlazor(options =>
+{
+    options.DetailedErrors = true;
+});
+
 var app = builder.Build();
 
 using var scope = app.Services.CreateScope();

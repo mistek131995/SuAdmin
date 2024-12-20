@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
+using Contracts.Interfaces;
 using Microsoft.AspNetCore.Components;
-using PluginContracts;
 
 namespace SuAdmin.Extensions;
 
@@ -75,10 +75,10 @@ public static class PluginManager
     
     public static Type GetMainPageFromAssembly(this AppDomain assembly, string assemblyName)
     {
-        return AppDomain.CurrentDomain
-            .GetAssemblies()
-            .FirstOrDefault(x => x.GetName().Name == assemblyName)
-            .GetTypes()
-            .FirstOrDefault(t => t.BaseType?.Name == nameof(ComponentBase) && !t.IsAbstract && t.FullName.Contains("MainPage"));
+        var targetAssembly = AppDomain.CurrentDomain.GetAssemblies()
+            .FirstOrDefault(x => x.GetName().Name == assemblyName);
+        
+        return targetAssembly?.GetTypes()
+            .FirstOrDefault(t => typeof(ComponentBase).IsAssignableFrom(t) && !t.IsAbstract && t.Name == "MainPage");
     }
 }
