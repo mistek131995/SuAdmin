@@ -65,11 +65,20 @@ public static class PluginManager
             .ToList();
     }
     
-    public static List<Type> GetWidgetsInstanceFromAssembly(this AppDomain assembly)
+    public static List<Type> GetWidgetsFromAssembly(this AppDomain assembly)
     {
         return AppDomain.CurrentDomain
             .GetAssemblies()
-            .SelectMany(x => x.GetTypes().Where(t => t.BaseType?.Name == nameof(ComponentBase) && !t.IsAbstract && t.FullName.Contains("Widget")).ToList())
+            .SelectMany(x => x.GetTypes().Where(t => t.BaseType?.Name == nameof(ComponentBase) && !t.IsAbstract && t.FullName.Contains("MainWidget")).ToList())
             .ToList();
+    }
+    
+    public static Type GetMainPageFromAssembly(this AppDomain assembly, string assemblyName)
+    {
+        return AppDomain.CurrentDomain
+            .GetAssemblies()
+            .FirstOrDefault(x => x.GetName().Name == assemblyName)
+            .GetTypes()
+            .FirstOrDefault(t => t.BaseType?.Name == nameof(ComponentBase) && !t.IsAbstract && t.FullName.Contains("MainPage"));
     }
 }

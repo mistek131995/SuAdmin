@@ -1,27 +1,25 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
-using PluginContracts;
 using SuAdmin.Extensions;
 using SuAdmin.Infrastructure;
 using SuAdmin.Infrastructure.Database;
 
+namespace SuAdmin.Components.Pages.PluginManager.Components;
 
-namespace SuAdmin.Components.Pages;
-
-public partial class PluginManager : ComponentBase
+public partial class PluginsTable : ComponentBase
 {
     [Inject] private SqlLiteContext _context { get; set; }
     
     private List<Plugin>? _installedPlugins;
-    private List<IPlugin>? _plugins;
+    private List<PluginViewModel>? _plugins;
 
     protected override async Task OnInitializedAsync()
     {
         _installedPlugins = await _context.Plugins.ToListAsync();
-        _plugins = AppDomain.CurrentDomain.GetPluginsMainInstanceFromAssembly();
+        _plugins = GetPluginsViewModels();
     }
 
-    private async Task InstallPlugin(IPlugin plugin)
+    private async Task InstallPlugin(PluginViewModel plugin)
     {
         await plugin.InstallPlugin();
 
@@ -38,13 +36,13 @@ public partial class PluginManager : ComponentBase
             await _context.SaveChangesAsync();
     
             _installedPlugins = await _context.Plugins.ToListAsync();
-            _plugins = AppDomain.CurrentDomain.GetPluginsMainInstanceFromAssembly();
+            _plugins = GetPluginsViewModels();
             
             StateHasChanged();
         }
     }
 
-    private async Task UninstallPlugin(IPlugin plugin)
+    private async Task UninstallPlugin(PluginViewModel plugin)
     {
         var installedPlugin = await _context.Plugins.FirstOrDefaultAsync(x => x.Name == plugin.Name);
 
@@ -54,9 +52,32 @@ public partial class PluginManager : ComponentBase
             await _context.SaveChangesAsync();
             
             _installedPlugins = await _context.Plugins.ToListAsync();
-            _plugins = AppDomain.CurrentDomain.GetPluginsMainInstanceFromAssembly();
+            _plugins = GetPluginsViewModels();
         }
         
         StateHasChanged();
+    }
+
+    private List<PluginViewModel> GetPluginsViewModels()
+    {
+        var plugins = AppDomain.CurrentDomain.GetPluginsMainInstanceFromAssembly();
+
+        return plugins.Select(x => new PluginViewModel()
+        {
+            Name = x.Name,
+            Assembly = x.GetType().Assembly.GetName().Name,
+            Version = x.GetType().Assembly.GetName().Version.ToString(),
+            Description = x.Description,
+            InstallPlugin = async () => await x.InstallPlugin()
+        }).ToList();
+    }
+
+    private class PluginViewModel
+    {
+        public string Name { get; set; }
+        public string Assembly { get; set; }
+        public string Version { get; set; }
+        public string Description { get; set; }
+        public Func<Task> InstallPlugin { get; set; }
     }
 }

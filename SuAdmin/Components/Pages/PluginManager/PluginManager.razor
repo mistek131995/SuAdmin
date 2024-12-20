@@ -1,0 +1,14 @@
+﻿@page "/plugin-manager/{assemblyName?}"
+@using SuAdmin.Components.Pages.PluginManager.Components
+@rendermode InteractiveServer
+
+<h3>PluginManager</h3>
+
+@if (assemblyName is null)
+{
+    <PluginsTable/>
+}
+else
+{
+    <DynamicComponent Type="GetPluginMainPage()"/>
+}
