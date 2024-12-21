@@ -5,36 +5,42 @@ using Contracts.Components;
 using KafkaPlugin.Database;
 using KafkaPlugin.Database.Database;
 using Microsoft.AspNetCore.Components;
-using Microsoft.JSInterop;
 
 namespace KafkaPlugin.Components.MainComponents;
 
 public partial class AddHostModal : ComponentBase
 {
-    [Inject] private IJSRuntime JSRuntime { get; set; }
-    
     private Modal? ModalRef;
     private AddHostModel addHostModel = new();
-    
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+
+    private RenderFragment OpenModalButton;
+    private RenderFragment CloseModalButton;
+
+    protected override void OnInitialized()
     {
-        if (firstRender)
+        CloseModalButton = builder =>
         {
-            var dotNetRef = DotNetObjectReference.Create(this);
-            
-            await JSRuntime.InvokeVoidAsync("addHostBtnHandler", "addHost", dotNetRef);
-            await JSRuntime.InvokeVoidAsync("closeModal", "closeModal", dotNetRef);
-        }
+            builder.OpenElement(0, "button");
+            builder.AddAttribute(1, "class", "btn btn-secondary");
+            builder.AddAttribute(2, "type", "button");
+            builder.AddAttribute(3, "onclick", EventCallback.Factory.Create(this, () => ModalRef?.Hide()));
+            builder.AddContent(4, "Закрыть");
+            builder.CloseElement();
+        };
+
+        OpenModalButton = builder =>
+        {
+            builder.OpenElement(0, "button");
+            builder.AddAttribute(1, "class", "btn btn-success");
+            builder.AddAttribute(2, "onclick", EventCallback.Factory.Create(this, () => ModalRef?.Show()));
+            builder.AddContent(3, "Добавить хост");
+            builder.CloseElement();
+        };
     }
-    
-    [JSInvokable]
     public void AddHostAsync()
     {
-        Console.WriteLine("Метод OnButtonClicked вызван.");
         ModalRef?.Show();
     }
-
-    [JSInvokable]
     public void CloseModal() => ModalRef?.Hide();
     
     private Task HandleClose()
@@ -54,8 +60,6 @@ public partial class AddHostModal : ComponentBase
         });
         
         await context.SaveChangesAsync();
-        
-        Console.WriteLine(addHostModel.Ip + ":" + addHostModel.Port);
         
         CloseModal();
     }

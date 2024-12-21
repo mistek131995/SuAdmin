@@ -17,30 +17,10 @@
         </div>
         
         <div class="modal-footer">
-            <button id="closeModal" type="button" class="btn btn-secondary">Закрыть</button>
+            @CloseModalButton
             <button type="submit" class="btn btn-success">Добавить</button>
         </div>
     </EditForm>
 </Modal>
 
-<button id="addHost" class="btn btn-primary">Добавить хост</button>
-
-<script>
-    function addHostBtnHandler(buttonId, dotNetHelper) {
-        const button = document.getElementById(buttonId);
-        if (button) {
-            button.addEventListener("click", () => {
-                dotNetHelper.invokeMethodAsync("AddHostAsync");
-            });
-        }
-    }
-    
-    function closeModal(buttonId, dotNetHelper){
-        const button = document.getElementById(buttonId);
-        if (button){
-            button.addEventListener("click", () => {
-                dotNetHelper.invokeMethodAsync("CloseModal");
-            })
-        }
-    }
-</script>
+@OpenModalButton
