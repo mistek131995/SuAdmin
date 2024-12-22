@@ -1,6 +1,6 @@
 ﻿using KafkaPlugin.Interfaces.Repositories;
 
-namespace KfkAdmin.Interfaces.Providers;
+namespace KafkaPlugin.Interfaces.Providers;
 
 public interface IKafkaRepositoryProvider
 {

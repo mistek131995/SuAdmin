@@ -7,7 +7,7 @@
         foreach (var broker in _brokers)
         {
             <div class="border border-1 rounded-2">
-                @(broker.Host + ":" + broker.Port)
+                @(broker.Host + ":" + broker.Port) (@broker.IsAvailable)
             </div>
         }
     }

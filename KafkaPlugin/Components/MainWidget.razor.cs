@@ -1,20 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Confluent.Kafka;
+using KafkaPlugin.Interfaces.Providers;
+using KafkaPlugin.Models.Repositories;
+using KfkAdmin.Models.Entities;
 using Microsoft.AspNetCore.Components;
 
 namespace KafkaPlugin.Components;
 
 public partial class MainWidget : ComponentBase
 {
-    [Inject] private IAdminClient _adminClient { get; set; }
+    [Inject] private IKafkaRepositoryProvider _kafkaRepositoryProvider { get; set; }
     
-    private List<BrokerMetadata> _brokers;
+    private List<Broker> _brokers;
     
     
     protected override async Task OnInitializedAsync()
     {
-        _brokers = await Task.Run(() => _adminClient.GetMetadata(TimeSpan.FromSeconds(2)).Brokers);
+        _brokers = await _kafkaRepositoryProvider.BrokerRepository.GetAllAsync();
     }
 }

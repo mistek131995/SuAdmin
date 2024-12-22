@@ -1,10 +1,12 @@
 ﻿using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
-using Confluent.Kafka;
 using Contracts.Interfaces;
 using KafkaPlugin.Database;
 using KafkaPlugin.Database.Database;
+using KafkaPlugin.Interfaces.Providers;
+using KafkaPlugin.Service.Providers;
+using KafkaPlugin.Utils;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -27,15 +29,9 @@ public class Main : IPlugin
 
     public void AddService(IServiceCollection services)
     {
-        services.AddTransient<IAdminClient>(x =>
-        {
-            var adminClientConfig = new AdminClientConfig()
-            {
-                BootstrapServers = "localhost:9092"
-            };
-
-            return new AdminClientBuilder(adminClientConfig).Build();
-        });
+        services.AddScoped<Context>();
+        services.AddScoped<KafkaClientBuilder>();
+        services.AddTransient<IKafkaRepositoryProvider, KafkaRepositoryProvider>();
     }
     
     

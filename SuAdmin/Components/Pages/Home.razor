@@ -12,7 +12,7 @@
     <p>Это содержимое модального окна.</p>
 </Modal>
 
-@foreach (var widget in _widgets)
+@foreach (var widget in Extensions.PluginManager.WidgetTypes)
 {
     <DynamicComponent Type="widget"/>
 }
@@ -20,13 +20,6 @@
 
 @code
 {
-    private List<Type> _widgets;
-    
-    protected override void OnInitialized()
-    {
-        _widgets = AppDomain.CurrentDomain.GetWidgetsFromAssembly();
-    }
-    
     private Modal? ModalRef;
 
     private void ShowModal()
