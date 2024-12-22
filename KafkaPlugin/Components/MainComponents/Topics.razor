@@ -1,45 +1,45 @@
 ﻿<div class="d-flex mb-2">
-    <AddTopicModal/>
+    <AddTopicModal OnTopicAdded="UpdateMainPageEvent"/>
 </div>
 
 <div class="d-flex">
-    @if (_topics == null)
+    @if (topics == null)
     {
         <div class="w-100 text-center">
             Загружаем список топиков
         </div>
     }
-    else if (_topics.Count > 0)
+    else if (topics.Count > 0)
     {
-        foreach (var topic in _topics)
+        foreach (var topic in topics)
         {
             <div class="border border-1 rounded-3 p-2 me-3">
                 <div>
-                    <label>Имя:</label>
+                    <label class="fw-bold">Имя:</label>
                     @topic.Name
                 </div>
                 <div>
-                    <label>Брокеры:</label>
+                    <label class="fw-bold">Брокеры:</label>
                     @(string.Join(", ", topic.BrokerIds))
                 </div>
                 <div>
-                    <label>Фактор репликации:</label>
+                    <label class="fw-bold">Фактор репликации:</label>
                     @topic.ReplicationFactor
                 </div>
                 <div>
-                    <label>Кол-во партиций:</label>
+                    <label class="fw-bold">Кол-во партиций:</label>
                     @topic.PartitionCount
                 </div>
                 <div>
-                    <label>Кол-во сообщений:</label>
+                    <label class="fw-bold">Кол-во сообщений:</label>
                     @topic.MessageCount
                 </div>
                 <div>
-                    <label>Макс. отступ:</label>
+                    <label class="fw-bold">Макс. отступ:</label>
                     @topic.MaxOffset
                 </div>
                 <div>
-                    <label>Мин. отступ:</label>
+                    <label class="fw-bold">Мин. отступ:</label>
                     @topic.MinOffset
                 </div>
             </div>

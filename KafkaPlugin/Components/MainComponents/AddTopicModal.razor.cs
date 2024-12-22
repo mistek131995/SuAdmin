@@ -1,10 +1,18 @@
-﻿using Contracts.Components;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Threading.Tasks;
+using Contracts.Components;
+using KafkaPlugin.Interfaces.Providers;
+using KafkaPlugin.Models.Repositories;
 using Microsoft.AspNetCore.Components;
 
 namespace KafkaPlugin.Components.MainComponents;
 
 public partial class AddTopicModal : ComponentBase
 {
+    [Parameter] public EventCallback OnTopicAdded { get; set; }
+    
+    [Inject] private IKafkaRepositoryProvider _kafkaRepositoryProvider { get; set; }
+    
     private Modal? _modalRef;
     private AddTopicModel _model = new();
     
@@ -33,10 +41,28 @@ public partial class AddTopicModal : ComponentBase
         };
     }
 
+    public async Task OnSubmitAsync()
+    {
+        await _kafkaRepositoryProvider.TopicRepository.CreateAsync(new Topic()
+        {
+            Name = _model.Name,
+            ReplicationFactor = _model.ReplicationFactor,
+            PartitionCount = _model.PartitionCount,
+        });
+        
+        _modalRef?.Hide();
+        await OnTopicAdded.InvokeAsync();
+    } 
+
     private class AddTopicModel
     {
+        [Required(ErrorMessage = "Заполните имя топика")]
         public string Name { get; set; } = string.Empty;
-        public int Partition { get; set; } = 0;
-        public int ReplicationFactor { get; set; } = 0;
+        
+        [Required(ErrorMessage = "Заполните кол-во партиций"), Range(1, int.MaxValue, ErrorMessage = "Диапазон значений фактора репликации от 1 до 2147483647")]
+        public int PartitionCount { get; set; } = 1;
+        
+        [Required(ErrorMessage = "Заполните фактор репликации"), Range(1, short.MaxValue, ErrorMessage = "Диапазон значений фактора репликации от 1 до 32767")]
+        public short ReplicationFactor { get; set; } = 1;
     }
 }

@@ -1,17 +1,17 @@
 ﻿<div class="d-flex mb-2">
-    <AddHostModal/>
+    <AddHostModal OnHostAdded="UpdateMainPageEvent"/>
 </div>
 
 <div class="d-flex">
-    @if (_brokers == null)
+    @if (brokers == null)
     {
         <div class="w-100 text-center">
             Загружаем список брокеров
         </div>
     }
-    else if (_brokers.Count > 0)
+    else if (brokers.Count > 0)
     {
-        foreach (var broker in _brokers)
+        foreach (var broker in brokers)
         {
             <div class="border border-1 rounded-3 p-2 me-3">
                 <div>

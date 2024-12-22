@@ -1,7 +1,7 @@
 ﻿@using Contracts.Components
 @using Microsoft.AspNetCore.Components.Forms
 <Modal @ref="_modalRef" Title="Добавление топика">
-    <EditForm Model="_model">
+    <EditForm Model="_model" OnValidSubmit="OnSubmitAsync">
         <DataAnnotationsValidator/>
         <ValidationSummary/>
         
@@ -11,7 +11,7 @@
         </div>
         <div>
             <label>Кол-во партиций:</label>
-            <InputNumber class="form-control" @bind-Value="_model.Partition"/>
+            <InputNumber class="form-control" @bind-Value="_model.PartitionCount"/>
         </div>
         <div class="mb-3">
             <label>Фактор репликации:</label>

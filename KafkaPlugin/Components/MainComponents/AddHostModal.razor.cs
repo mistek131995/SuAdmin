@@ -10,6 +10,8 @@ namespace KafkaPlugin.Components.MainComponents;
 
 public partial class AddHostModal : ComponentBase
 {
+    [Parameter] public EventCallback OnHostAdded { get; set; }
+    
     private Modal? _modalRef;
     private AddHostModel _addHostModel = new();
 

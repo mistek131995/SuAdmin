@@ -1,8 +1,10 @@
 ﻿@using KafkaPlugin.Components.MainComponents
 
 <div>
-    <Brokers/>
+    <Brokers brokers="_brokers" 
+             UpdateMainPageEvent="UpdateMainPageAsync"/>
     
     <hr/>
-    <Topics/>
+    <Topics topics="_topics" 
+            UpdateMainPageEvent="UpdateMainPageAsync"/>
 </div>
