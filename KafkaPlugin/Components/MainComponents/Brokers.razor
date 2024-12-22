@@ -1,13 +1,13 @@
 ﻿<div class="d-flex">
-    @if (brokers == null)
+    @if (_brokers == null)
     {
         <div class="w-100 text-center">
             Загружаем список брокеров
         </div>
     }
-    else if (brokers.Count > 0)
+    else if (_brokers.Count > 0)
     {
-        foreach (var broker in brokers)
+        foreach (var broker in _brokers)
         {
             <div class="border border-1 rounded-3 p-2 me-3">
                 <div>@(broker.Host + ":" + broker.Port)</div>

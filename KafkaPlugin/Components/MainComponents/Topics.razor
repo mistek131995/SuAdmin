@@ -1,5 +1,24 @@
-﻿<h3>Topics</h3>
-
-@code {
-    
-}
+﻿<div class="d-flex">
+    @if (_topics == null)
+    {
+        <div class="w-100 text-center">
+            Загружаем список топиков
+        </div>
+    }
+    else if (_topics.Count > 0)
+    {
+        foreach (var topic in _topics)
+        {
+            <div class="border border-1 rounded-3 p-2 me-3">
+                <div>@topic.Name</div>
+                <div>@(string.Join(", ", topic.BrokerIds))</div>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="w-100 text-center">
+            Список пуст
+        </div>
+    }
+</div>

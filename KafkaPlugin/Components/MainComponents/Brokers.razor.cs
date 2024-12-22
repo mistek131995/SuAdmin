@@ -10,10 +10,10 @@ public partial class Brokers : ComponentBase
 {
     [Inject] private IKafkaRepositoryProvider _kafkaRepositoryProvider { get; set; }
     
-    private List<Broker> brokers;
+    private List<Broker>? _brokers;
     
     protected override async Task OnInitializedAsync()
     {
-        brokers = await _kafkaRepositoryProvider.BrokerRepository.GetAllAsync();
+        _brokers = await _kafkaRepositoryProvider.BrokerRepository.GetAllAsync();
     }
 }

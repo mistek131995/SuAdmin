@@ -9,10 +9,10 @@ public partial class Topics : ComponentBase
 {
     [Inject] private IKafkaRepositoryProvider _kafkaRepositoryProvider { get; set; }
     
-    private List<Models.Repositories.Topic> topics;
+    private List<Models.Repositories.Topic>? _topics;
 
     protected override async Task OnInitializedAsync()
     {
-        topics = await _kafkaRepositoryProvider.TopicRepository.GetAllAsync();
+        _topics = await _kafkaRepositoryProvider.TopicRepository.GetAllAsync();
     }
 }
