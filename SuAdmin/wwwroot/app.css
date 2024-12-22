@@ -59,6 +59,10 @@ h1:focus {
     text-align: start;
 }
 
+.modal-footer{
+    padding-bottom: 0 !important;
+}
+
 @media (max-width: 576px) {
     .w-md-100{
         width: 100% !important;

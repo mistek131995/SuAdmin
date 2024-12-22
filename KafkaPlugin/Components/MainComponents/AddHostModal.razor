@@ -1,26 +1,26 @@
 ﻿@using Contracts.Components
 @using Microsoft.AspNetCore.Components.Forms
 
-<Modal @ref="ModalRef" Title="Добавить новый хост" OnClose="HandleClose" OnConfirm="OnSubmitHandlerAsync">
-    <EditForm Model="addHostModel" OnValidSubmit="OnSubmitHandlerAsync">
+<Modal @ref="_modalRef" Title="Добавить новый хост" OnClose="HandleClose" OnConfirm="OnSubmitHandlerAsync">
+    <EditForm Model="_addHostModel" OnValidSubmit="OnSubmitHandlerAsync">
         <DataAnnotationsValidator/>
         <ValidationSummary/>
         
         <div class="mb-2">
             <label>IP адрес:</label>
-            <InputText class="form-control" @bind-Value="addHostModel.Ip"/>
+            <InputText class="form-control" @bind-Value="_addHostModel.Ip"/>
         </div>
         
         <div class="mb-3">
             <label>Порт:</label>
-            <InputNumber class="form-control" @bind-Value="addHostModel.Port"/>
+            <InputNumber class="form-control" @bind-Value="_addHostModel.Port"/>
         </div>
         
         <div class="modal-footer">
-            @CloseModalButton
-            <button type="submit" class="btn btn-success">Добавить</button>
+            @_closeModalButton
+            <button type="submit" class="btn btn-success btn-sm">Добавить</button>
         </div>
     </EditForm>
 </Modal>
 
-@OpenModalButton
+@_openModalButton

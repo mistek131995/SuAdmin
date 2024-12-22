@@ -2,7 +2,10 @@
 @using SuAdmin.Components.Pages.PluginManager.Components
 @rendermode InteractiveServer
 
-<h3>PluginManager</h3>
+@if (string.IsNullOrEmpty(assemblyName))
+{
+    <h3>PluginManager</h3>
+}
 
 @if (assemblyName is null)
 {

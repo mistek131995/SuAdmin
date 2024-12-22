@@ -1,0 +1,28 @@
+﻿@using Contracts.Components
+@using Microsoft.AspNetCore.Components.Forms
+<Modal @ref="_modalRef" Title="Добавление топика">
+    <EditForm Model="_model">
+        <DataAnnotationsValidator/>
+        <ValidationSummary/>
+        
+        <div>
+            <label>Имя топика:</label>
+            <InputText class="form-control" @bind-Value="_model.Name"/>
+        </div>
+        <div>
+            <label>Кол-во партиций:</label>
+            <InputNumber class="form-control" @bind-Value="_model.Partition"/>
+        </div>
+        <div class="mb-3">
+            <label>Фактор репликации:</label>
+            <InputNumber class="form-control" @bind-Value="_model.ReplicationFactor"/>
+        </div>
+
+        <div class="modal-footer">
+            @_closeModalButton
+            <button class="btn btn-success btn-sm">Добавить топик</button>
+        </div>
+    </EditForm>
+</Modal>
+
+@_openModalButton

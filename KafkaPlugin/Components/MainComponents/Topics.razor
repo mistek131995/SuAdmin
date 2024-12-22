@@ -1,4 +1,8 @@
-﻿<div class="d-flex">
+﻿<div class="d-flex mb-2">
+    <AddTopicModal/>
+</div>
+
+<div class="d-flex">
     @if (_topics == null)
     {
         <div class="w-100 text-center">
@@ -10,8 +14,34 @@
         foreach (var topic in _topics)
         {
             <div class="border border-1 rounded-3 p-2 me-3">
-                <div>@topic.Name</div>
-                <div>@(string.Join(", ", topic.BrokerIds))</div>
+                <div>
+                    <label>Имя:</label>
+                    @topic.Name
+                </div>
+                <div>
+                    <label>Брокеры:</label>
+                    @(string.Join(", ", topic.BrokerIds))
+                </div>
+                <div>
+                    <label>Фактор репликации:</label>
+                    @topic.ReplicationFactor
+                </div>
+                <div>
+                    <label>Кол-во партиций:</label>
+                    @topic.PartitionCount
+                </div>
+                <div>
+                    <label>Кол-во сообщений:</label>
+                    @topic.MessageCount
+                </div>
+                <div>
+                    <label>Макс. отступ:</label>
+                    @topic.MaxOffset
+                </div>
+                <div>
+                    <label>Мин. отступ:</label>
+                    @topic.MinOffset
+                </div>
             </div>
         }
     }

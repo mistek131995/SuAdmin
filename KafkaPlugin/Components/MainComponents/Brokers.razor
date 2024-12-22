@@ -1,4 +1,8 @@
-﻿<div class="d-flex">
+﻿<div class="d-flex mb-2">
+    <AddHostModal/>
+</div>
+
+<div class="d-flex">
     @if (_brokers == null)
     {
         <div class="w-100 text-center">
@@ -10,10 +14,16 @@
         foreach (var broker in _brokers)
         {
             <div class="border border-1 rounded-3 p-2 me-3">
-                <div>@(broker.Host + ":" + broker.Port)</div>
-                <div>@(broker.IsAvailable ? "Онлайн" : "Оффлайн")</div>
-                <div class="d-flex justify-content-end">
-                    <button class="btn btn-primary btn-sm">Редактировать</button>
+                <div>
+                    <span class="fw-bold">Хост: </span>
+                    @(broker.Host + ":" + broker.Port)
+                </div>
+                <div>
+                    <span class="fw-bold">Статус: </span>
+                    @(broker.IsAvailable ? (MarkupString)"<span class=\"badge text-bg-success\">Онлайн</span>" : (MarkupString)"<span class=\"badge text-bg-danger\">Оффлайн</span>")
+                </div>
+                <div class="d-flex justify-content-end mt-1">
+                    <button class="btn btn-primary btn-sm me-1">Редактировать</button>
                     <button class="btn btn-danger btn-sm">Удалить</button>
                 </div>
             </div>
