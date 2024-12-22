@@ -1,6 +1,4 @@
-﻿using Confluent.Kafka;
-
-namespace KfkAdmin.Models.Entities;
+﻿namespace KafkaPlugin.Models.Repositories;
 
 public class ConsumerGroup
 {

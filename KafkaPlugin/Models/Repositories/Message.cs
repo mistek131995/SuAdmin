@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace KfkAdmin.Models.Entities;
+namespace KafkaPlugin.Models.Repositories;
 
 public class Message
 {

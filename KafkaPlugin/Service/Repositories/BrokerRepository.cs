@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Confluent.Kafka;
 using KafkaPlugin.Database;
 using KafkaPlugin.Interfaces.Repositories;
 using KafkaPlugin.Models.Repositories;
@@ -22,6 +21,28 @@ public class BrokerRepository(Context context, KafkaClientBuilder kafkaClientBui
         
         var metadata = await Task.Run(() => adminClient.GetMetadata(TimeSpan.FromSeconds(5)));
 
+        foreach (var host in allHosts)
+        {
+            brokers.Add(new Broker()
+            {
+                Host = host.Ip,
+                Port = host.Port,
+                IsAvailable = metadata.Brokers.Any(x => x.Host == host.Ip && x.Port == host.Port),
+            });
+        }
+        
+        return brokers;
+    }
+
+    public async Task<List<Broker>> GetByIdsAsync(IEnumerable<int> brokerIds)
+    {
+        var allHosts = await context.Hosts.ToListAsync();
+        var adminClient = await kafkaClientBuilder.Build();
+        
+        var metadata = await Task.Run(() => adminClient.GetMetadata(TimeSpan.FromSeconds(10)));
+        
+        var brokers = new List<Broker>();
+        
         foreach (var host in allHosts)
         {
             brokers.Add(new Broker()

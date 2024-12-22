@@ -6,9 +6,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace KafkaPlugin.Utils;
 
-public class KafkaClientBuilder(Context context)
+public class KafkaConsumerBuilder(Context context)
 {
-    private AdminClientBuilder _builder;
+    public const string CONSUMER_GROUP_ID = "kfk-admin-group";
+    
+    private ConsumerBuilder<string?, string> _builder;
 
     private async Task AddHostsAsync()
     {
@@ -24,13 +26,17 @@ public class KafkaClientBuilder(Context context)
             .Select(x => x.Host)
             .ToList();
         
-        _builder = new AdminClientBuilder(new AdminClientConfig()
+        _builder = new ConsumerBuilder<string?, string>(new ConsumerConfig()
         {
-            BootstrapServers = string.Join(";", filteredHosts.Select(x => $"{x.Ip}:{x.Port}"))
+            BootstrapServers = string.Join(";", filteredHosts.Select(x => $"{x.Ip}:{x.Port}")),
+            GroupId = CONSUMER_GROUP_ID,
+            AutoOffsetReset = AutoOffsetReset.Earliest,
+            EnableAutoCommit = false,
+            MetadataMaxAgeMs = 1000
         });
     }
 
-    public async Task<IAdminClient> Build()
+    public async Task<IConsumer<string?, string>> Build()
     {
         await AddHostsAsync();
         

@@ -29,8 +29,8 @@ public class KafkaRepositoryProvider(IServiceProvider serviceProvider) : IKafkaR
     }
     
     public IBrokerRepository BrokerRepository => Get<BrokerRepository>();
-    public ITopicRepository TopicRepository { get; }
-    public IPartitionRepository PartitionRepository { get; }
+    public ITopicRepository TopicRepository => Get<TopicRepository>();
+    public IPartitionRepository PartitionRepository => Get<PartitionRepository>();
     public IMessageRepository MessageRepository { get; }
-    public IConsumerGroupRepository ConsumerGroupRepository { get; }
+    public IConsumerGroupRepository ConsumerGroupRepository => Get<ConsumerGroupRepository>();
 }

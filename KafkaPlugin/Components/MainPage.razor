@@ -4,30 +4,6 @@
     <div class="d-flex">
         <AddHostModal/>
     </div>
-    <div class="d-flex">
-        @if (brokers == null)
-        {
-            <div class="w-100 text-center">
-                Загружаем список брокеров
-            </div>
-        }
-        else if (brokers.Count > 0)
-        {
-            foreach (var broker in brokers)
-            {
-                <div class="border border-1 rounded-3 p-2 me-3">
-                    <div>@(broker.Host + ":" + broker.Port)</div>
-                    <div>@(broker.IsAvailable ? "Онлайн" : "Оффлайн")</div>
-                </div>
-            }
-        }
-        else
-        {
-            <div class="w-100 text-center">
-                Список пуст
-            </div>
-        }
-        
-
-    </div>
+    
+    <Brokers/>
 </div>

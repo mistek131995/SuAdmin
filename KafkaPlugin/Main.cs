@@ -30,7 +30,10 @@ public class Main : IPlugin
     public void AddService(IServiceCollection services)
     {
         services.AddScoped<Context>();
-        services.AddScoped<KafkaClientBuilder>();
+        
+        services.AddTransient<KafkaClientBuilder>();
+        services.AddTransient<KafkaConsumerBuilder>();
+        
         services.AddTransient<IKafkaRepositoryProvider, KafkaRepositoryProvider>();
     }
     

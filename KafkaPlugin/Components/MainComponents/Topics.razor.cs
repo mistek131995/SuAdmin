@@ -1,20 +1,18 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using KafkaPlugin.Interfaces.Providers;
-using KafkaPlugin.Models.Repositories;
 using Microsoft.AspNetCore.Components;
 
-namespace KafkaPlugin.Components;
+namespace KafkaPlugin.Components.MainComponents;
 
-public partial class MainWidget : ComponentBase
+public partial class Topics : ComponentBase
 {
     [Inject] private IKafkaRepositoryProvider _kafkaRepositoryProvider { get; set; }
     
-    private List<Broker> _brokers;
-    
-    
+    private List<Models.Repositories.Topic> topics;
+
     protected override async Task OnInitializedAsync()
     {
-        _brokers = await _kafkaRepositoryProvider.BrokerRepository.GetAllAsync();
+        topics = await _kafkaRepositoryProvider.TopicRepository.GetAllAsync();
     }
 }

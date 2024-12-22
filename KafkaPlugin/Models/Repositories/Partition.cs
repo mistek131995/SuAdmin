@@ -1,4 +1,4 @@
-﻿namespace KfkAdmin.Models.Entities;
+﻿namespace KafkaPlugin.Models.Repositories;
 
 public class Partition
 {

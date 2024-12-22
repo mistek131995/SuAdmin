@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using KafkaPlugin.Models.Repositories;
 using KfkAdmin.Interfaces.Common;
-using KfkAdmin.Models.Entities;
 
 namespace KafkaPlugin.Interfaces.Repositories;
 

@@ -4,17 +4,16 @@ using KafkaPlugin.Interfaces.Providers;
 using KafkaPlugin.Models.Repositories;
 using Microsoft.AspNetCore.Components;
 
-namespace KafkaPlugin.Components;
+namespace KafkaPlugin.Components.MainComponents;
 
-public partial class MainWidget : ComponentBase
+public partial class Brokers : ComponentBase
 {
     [Inject] private IKafkaRepositoryProvider _kafkaRepositoryProvider { get; set; }
     
-    private List<Broker> _brokers;
-    
+    private List<Broker> brokers;
     
     protected override async Task OnInitializedAsync()
     {
-        _brokers = await _kafkaRepositoryProvider.BrokerRepository.GetAllAsync();
+        brokers = await _kafkaRepositoryProvider.BrokerRepository.GetAllAsync();
     }
 }
