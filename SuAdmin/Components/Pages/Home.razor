@@ -1,42 +1,9 @@
 ﻿@page "/"
-@using Contracts.Components
-@using SuAdmin.Extensions
 @rendermode InteractiveServer
 
 <PageTitle>Главная</PageTitle>
 
-<button class="btn btn-primary" @onclick="ShowModal">Открыть модальное окно</button>
-<button class="btn btn-primary" @onclick="@(() => Console.WriteLine("Test"))">Открыть модальное окно</button>
-
-<Modal @ref="ModalRef" Title="Пример" OnClose="HandleClose" OnConfirm="HandleConfirm">
-    <p>Это содержимое модального окна.</p>
-</Modal>
-
 @foreach (var widget in Extensions.PluginManager.WidgetTypes)
 {
     <DynamicComponent Type="widget"/>
-}
-
-
-@code
-{
-    private Modal? ModalRef;
-
-    private void ShowModal()
-    {
-        Console.WriteLine("Модальное окно закрыто.");
-        ModalRef?.Show();
-    }
-
-    private Task HandleClose()
-    {
-        Console.WriteLine("Модальное окно закрыто.");
-        return Task.CompletedTask;
-    }
-
-    private Task HandleConfirm()
-    {
-        Console.WriteLine("Подтверждено.");
-        return Task.CompletedTask;
-    }
 }

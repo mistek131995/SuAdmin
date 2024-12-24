@@ -22,9 +22,11 @@
                     <span class="fw-bold">Статус: </span>
                     @(broker.IsAvailable ? (MarkupString)"<span class=\"badge text-bg-success\">Онлайн</span>" : (MarkupString)"<span class=\"badge text-bg-danger\">Оффлайн</span>")
                 </div>
-                <div class="d-flex justify-content-end mt-1">
-                    <button class="btn btn-primary btn-sm me-1">Редактировать</button>
-                    <button class="btn btn-danger btn-sm">Удалить</button>
+                <div class="d-flex justify-content-end mt-3">
+                    <button class="btn btn-primary btn-sm me-1">
+                        <i class="bi bi-pencil"></i>
+                    </button>
+                    @_deleteButton((broker.Host, broker.Port))
                 </div>
             </div>
         }

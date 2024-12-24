@@ -9,7 +9,9 @@
     <ItemGroup>
       <Folder Include="Models\" />
       <Folder Include="Plugins\KafkaPlugin\" />
+      <Folder Include="Plugins\TaskTrackerPlugin\" />
       <Folder Include="Services\" />
+      <Folder Include="wwwroot\css\bootstrap-icons\" />
     </ItemGroup>
 
     <ItemGroup>

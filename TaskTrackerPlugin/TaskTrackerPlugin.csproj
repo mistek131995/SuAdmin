@@ -20,4 +20,19 @@
       <_ContentIncludedByDefault Remove="wwwroot\exampleJsInterop.js" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Contracts\Contracts.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Migrations\00_CreateMigrationTable.sql" />
+      <Content Include="Migrations\00_CreateMigrationTable.sql">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="Migrations\01_CreateColumnTable.sql" />
+      <Content Include="Migrations\01_CreateColumnTable.sql">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+    </ItemGroup>
+
 </Project>

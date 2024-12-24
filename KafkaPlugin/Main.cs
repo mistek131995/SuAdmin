@@ -92,6 +92,5 @@ public class Main : IPlugin
             });
             await context.SaveChangesAsync();
         }
-        
     }
 }

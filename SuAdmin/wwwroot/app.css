@@ -63,6 +63,11 @@ h1:focus {
     padding-bottom: 0 !important;
 }
 
+.bi-size-none{
+    width: auto !important;
+    height: auto !important;
+}
+
 @media (max-width: 576px) {
     .w-md-100{
         width: 100% !important;

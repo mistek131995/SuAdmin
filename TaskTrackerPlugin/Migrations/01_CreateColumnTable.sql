@@ -1,0 +1,5 @@
+﻿CREATE TABLE Columns (
+    Id INTEGER PRIMARY KEY AUTOINCREMENT,
+    Name TEXT NOT NULL,
+    SequenceNumber INTEGER NOT NULL
+);
